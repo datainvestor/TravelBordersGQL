@@ -9,9 +9,15 @@ schema {
     mutation: Mutation
 }
 
+input postInput {
+    """Facilitate creating mutations- DRY way"""
+    title: String!
+    description: String!
+}
+
 type Mutation {
-    createPost(title: String!, description: String!, created_at: String): PostResult!
-    updatePost(id: ID!, title: String, description: String): PostResult!
+    createPost(input: postInput, created_at: String): PostResult!
+    updatePost(id: ID!, input: postInput): PostResult!
     deletePost(id: ID): PostResult!
 }
 

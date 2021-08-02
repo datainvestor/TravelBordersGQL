@@ -50,12 +50,12 @@ def resolve_posts(*_):
     return Post.query.all()
 
 @mutation.field("createPost")
-def resolve_create_post(obj, info, title, description):
+def resolve_create_post(obj, info, input):
     """mutation type resolver to create post(item)"""
     try:
         today=date.today()
         post = Post(
-            title=title, description=description, created_at=today.strftime("%b-%d-%Y")
+            title=input['title'], description=input['description'], created_at=today.strftime("%b-%d-%Y")
         )
         db.session.add(post)
         db.session.commit()
@@ -72,13 +72,13 @@ def resolve_create_post(obj, info, title, description):
     return payload
 
 @mutation.field("updatePost")
-def update_post_resolver(obj, info, id, title, description):
+def update_post_resolver(obj, info, id, input):
     """Update post by its ID"""
     try:
         post = Post.query.get(id)
         if post:
-            post.title = title
-            post.description = description
+            post.title = input['title']
+            post.description = input['description']
         db.session.add(post)
         db.session.commit()
         payload = {
@@ -99,7 +99,7 @@ def delete_post_resolver(obj, info, id):
         db.session.delete(post)
         db.session.commit()
         payload = {"success": True, "post": post.to_dict()}
-    except AttributeError:
+    except:
         payload = {
             "success": False,
             "errors": ["Not found"]
