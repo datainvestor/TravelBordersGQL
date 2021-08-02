@@ -8,7 +8,7 @@ CORS(app)
 
 #Database config
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv('POSTGRES_DB')
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False #disable tracking modification of objects and sending signals to the application for every database change
 db = SQLAlchemy(app)
 
 #import routes/views - important to import it after setting app and relevant db config

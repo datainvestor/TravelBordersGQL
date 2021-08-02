@@ -1,7 +1,7 @@
 # Basic Flask app with Graphql
 Flask api template with simple country model and graphql queries.
 
-### Run for local development with docker:
+## Run for local development with docker:
 
 Build the image:
 
@@ -22,7 +22,16 @@ Alternatively just run the app locally:
 `flask run`
 
 
-### Production
+## Create databse (*pseudo migrate*) as follows:
+
+```
+>>> from main import db
+>>> db.create_all()
+```
+
+
+
+## Production
 Run with gunicorn (For heroku deployment)
 
 gunicorn api:app --bind 127.0.0.1:5057 -e POSTGRES_DB={{DATABASE LINK}}

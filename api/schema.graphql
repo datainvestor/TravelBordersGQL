@@ -1,8 +1,22 @@
+"""File with graphql schemas
+All the schemas listed here are available to call from playground or as an request payload (body)
+Mutations are used to create, update or delete records from the database.
+"""
+
+
 schema {
     query: Query
+    mutation: Mutation
+}
+
+type Mutation {
+    createPost(title: String!, description: String!, created_at: String): PostResult!
+    updatePost(id: ID!, title: String, description: String): PostResult!
+    deletePost(id: ID): PostResult!
 }
 
 type Post {
+    """ ! means that this query is non-nullable, so it must always return a result. """
     id: ID!
     title: String!
     description: String!
