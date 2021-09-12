@@ -1,4 +1,4 @@
-from .models import Post
+from .models import Country
 from ariadne import QueryType, MutationType
 from datetime import date
 from . import db
@@ -9,17 +9,15 @@ query = QueryType()
 mutation = MutationType()
 
 
-
 #bind resolver to schema item with query.field
-@query.field("listPosts")
-def listPosts_resolver(obj, info):
-    """Get all posts from database and modify output- resolver"""
+@query.field("listCountries")
+def listCountries_resolver(obj, info):
+    """Get all countries from database and modify output- resolver"""
     try:
-        posts = [post.to_dict() for post in Post.query.all()]
-        print(posts)
+        countries = [country.to_dict() for country in Country.query.all()]
         payload = {
             "success": True,
-            "posts": posts
+            "countries": countries
         }
     except Exception as error:
         payload = {
@@ -28,62 +26,60 @@ def listPosts_resolver(obj, info):
         }
     return payload
 
-@query.field("getPost")
-def getPost_resolver(obj, info, id):
-    """Get single post by ID- resolver"""
+@query.field("getCountry")
+def getCountry_resolver(obj, info, id):
+    """Get single country by ID- resolver"""
     try:
-        post = Post.query.get(id)
+        country = Country.query.get(id)
         payload = {
             "success": True,
-            "post": post.to_dict()
+            "country": country.to_dict()
         }
-    except AttributeError:  # post not found
+    except AttributeError:  # country not found
         payload = {
             "success": False,
-            "errors": ["Post item matching {id} not found"]
+            "errors": ["Country matching {id} not found"]
         }
     return payload
 
-@query.field("posts")
-def resolve_posts(*_):
+@query.field("countries")
+def resolve_countries(*_):
     """Simple way to create graphql resolver that lists all items from the model"""
-    return Post.query.all()
+    return Country.query.all()
 
-@mutation.field("createPost")
-def resolve_create_post(obj, info, input):
-    """mutation type resolver to create post(item)"""
+@mutation.field("createCountry")
+def resolve_create_country(obj, info, input):
+    """mutation type resolver to create country(item)"""
     try:
-        today=date.today()
-        post = Post(
-            title=input['title'], description=input['description'], created_at=today.strftime("%b-%d-%Y")
+        country = Country(
+            iso=input['iso'], name=input['name']
         )
-        db.session.add(post)
+        db.session.add(country)
         db.session.commit()
         payload = {
             "success": True,
-            "post": post.to_dict()
+            "country": country.to_dict()
         }
-    except ValueError:  # date format errors
+    except ValueError:
         payload = {
             "success": False,
-            "errors": [f"Incorrect date format provided. Date should be in "
-                       f"the format dd-mm-yyyy"]
+            "errors": [f"Incorrect data"]
         }
     return payload
 
-@mutation.field("updatePost")
-def update_post_resolver(obj, info, id, input):
-    """Update post by its ID"""
+@mutation.field("updateCountry")
+def update_country_resolver(obj, info, id, input):
+    """Update country by its ID"""
     try:
-        post = Post.query.get(id)
-        if post:
-            post.title = input['title']
-            post.description = input['description']
-        db.session.add(post)
+        country = Country.query.get(id)
+        if country:
+            country.iso = input['iso']
+            country.name = input['name']
+        db.session.add(country)
         db.session.commit()
         payload = {
             "success": True,
-            "post": post.to_dict()
+            "country": country.to_dict()
         }
     except AttributeError:  # todo not found
         payload = {
@@ -92,13 +88,13 @@ def update_post_resolver(obj, info, id, input):
         }
     return payload
 
-@mutation.field("deletePost")
-def delete_post_resolver(obj, info, id):
+@mutation.field("deleteCountry")
+def delete_country_resolver(obj, info, id):
     try:
-        post = Post.query.get(id)
-        db.session.delete(post)
+        country = Country.query.get(id)
+        db.session.delete(country)
         db.session.commit()
-        payload = {"success": True, "post": post.to_dict()}
+        payload = {"success": True, "country": country.to_dict()}
     except:
         payload = {
             "success": False,

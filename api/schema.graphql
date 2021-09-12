@@ -9,41 +9,41 @@ schema {
     mutation: Mutation
 }
 
-input postInput {
+type Country {
+    """ ! means that this query is non-nullable, so it must always return a result. """
+    id: ID!
+    iso: String!
+    name: String!
+}
+
+type CountryResult {
+    success: Boolean!
+    errors: [String]
+    country: Country
+}
+
+type CountriesResult {
+    success: Boolean!
+    errors: [String]
+    countries: [Country]
+}
+
+input countryInput {
     """Facilitate creating mutations- DRY way"""
-    title: String!
-    description: String!
+    iso: String!
+    name: String!
 }
 
 type Mutation {
-    createPost(input: postInput, created_at: String): PostResult!
-    updatePost(id: ID!, input: postInput): PostResult!
-    deletePost(id: ID): PostResult!
-}
-
-type Post {
-    """ ! means that this query is non-nullable, so it must always return a result. """
-    id: ID!
-    title: String!
-    description: String!
-    created_at: String!
-}
-
-type PostResult {
-    success: Boolean!
-    errors: [String]
-    post: Post
-}
-
-type PostsResult {
-    success: Boolean!
-    errors: [String]
-    posts: [Post]
+    # createPost(input: postInput, created_at: String): PostResult!
+    createCountry(input: countryInput): CountryResult!
+    updateCountry(id: ID!, input: countryInput): CountryResult!
+    deleteCountry(id: ID): CountryResult!
 }
 
 type Query {
-    listPosts: PostsResult!
-    getPost(id: ID!): PostResult!
-    posts: [Post]
+    listCountries: CountriesResult!
+    getCountry(id: ID!): CountryResult!
+    countries: [Country]
     hello: String!
 }

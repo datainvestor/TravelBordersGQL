@@ -22,11 +22,12 @@ Alternatively just run the app locally:
 `flask run`
 
 
-## Create databse (*pseudo migrate*) as follows:
+## Create databse (*migrate*) as follows:
 
 ```
->>> from main import db
->>> db.create_all()
+flask db init
+flask db migrate -m "Initial migration."
+flask db upgrade
 ```
 
 
