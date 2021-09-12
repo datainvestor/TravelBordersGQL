@@ -102,6 +102,29 @@ def delete_country_resolver(obj, info, id):
         }
     return payload
 
+@mutation.field("bulkCreateCountry")
+def resolve_bulk_create_country(obj, info, input):
+    """mutation type resolver to bulk create country/countries"""
+    try:
+        countries=[Country(iso=country['iso'], name=country['name']) 
+        for country in input]
+
+        # country = Country(
+        #     iso=input['iso'], name=input['name']
+        # )
+        db.session.add_all(countries)
+        db.session.commit()
+        payload = {
+            "success": True,
+            "countries": countries
+        }
+    except ValueError:
+        payload = {
+            "success": False,
+            "errors": [f"Incorrect data"]
+        }
+    return payload
+
 @query.field("hello")
 def resolve_hello(*_):
     return "Hello!"

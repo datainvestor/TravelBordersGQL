@@ -34,8 +34,9 @@ input countryInput {
     name: String!
 }
 
+
 type Mutation {
-    # createPost(input: postInput, created_at: String): PostResult!
+    bulkCreateCountry(input: [countryInput!]!): CountriesResult!
     createCountry(input: countryInput): CountryResult!
     updateCountry(id: ID!, input: countryInput): CountryResult!
     deleteCountry(id: ID): CountryResult!
