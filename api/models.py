@@ -1,20 +1,6 @@
 from . import db
 import enum
 
-class Post(db.Model):
-    """Simple post model"""
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String)
-    description = db.Column(db.String)
-    created_at = db.Column(db.Date)
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "title": self.title,
-            "description": self.description,
-            "created_at": str(self.created_at.strftime('%d-%m-%Y'))
-        }
-
 class Status(enum.Enum):
     OPEN = "Open"
     CLOSED  = "Closed"
@@ -24,8 +10,8 @@ class Country(db.Model):
     """Country model"""
     __tablenbame__="country"
     id = db.Column(db.Integer, primary_key=True)
-    iso = db.Column(db.String)
-    name = db.Column(db.String)
+    iso = db.Column(db.String, unique=True, nullable=False)
+    name = db.Column(db.String, unique=True, nullable=False)
     def to_dict(self):
         return {
             "id": self.id,
