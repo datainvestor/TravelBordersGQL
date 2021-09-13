@@ -1,6 +1,7 @@
 from .models import Country
 from ariadne import QueryType, MutationType
-from datetime import date
+from sqlalchemy.exc import IntegrityError
+from psycopg2.errors import UniqueViolation
 from . import db
 #File containing graphql resolvers(queries)
 
@@ -65,6 +66,17 @@ def resolve_create_country(obj, info, input):
             "success": False,
             "errors": [f"Incorrect data"]
         }
+    except IntegrityError as e:
+        if type(e.orig)==UniqueViolation:
+            payload = {
+                "success": False,
+                "errors": [f"Duplicate values"]
+            }
+        else:
+            payload = {
+                "success": False,
+                "errors": [f"Integrity error"]
+            }
     return payload
 
 @mutation.field("updateCountry")
@@ -122,6 +134,17 @@ def resolve_bulk_create_country(obj, info, input):
         payload = {
             "success": False,
             "errors": [f"Incorrect data"]
+        }
+    except IntegrityError as e:
+        if type(e.orig)==UniqueViolation:
+            payload = {
+                "success": False,
+                "errors": [f"Duplicate values"]
+            }
+    else:
+        payload = {
+            "success": False,
+            "errors": [f"Integrity error"]
         }
     return payload
 
