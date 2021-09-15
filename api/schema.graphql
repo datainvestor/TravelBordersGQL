@@ -9,6 +9,8 @@ schema {
     mutation: Mutation
 }
 
+"""Country schema"""
+
 type Country {
     """ ! means that this query is non-nullable, so it must always return a result. """
     id: ID!
@@ -34,17 +36,54 @@ input countryInput {
     name: String!
 }
 
+"""Borders schema"""
+
+enum BorderStatus {
+    OPEN
+    CLOSED
+    LIMIT
+}
+
+type Border {
+    """ ! means that this query is non-nullable, so it must always return a result. """
+    id: ID!
+    origin_id: ID!
+    destination_id: ID!
+    status: String!
+}
+
+type BorderResult {
+    success: Boolean!
+    errors: [String]
+    border: Border
+}
+
+type BordersResult {
+    success: Boolean!
+    errors: [String]
+    borders: [Border]
+}
+
+input borderInput {
+    """Facilitate creating mutations- DRY way"""
+    origin_id: ID!
+    destination_id: ID!
+    status: BorderStatus
+}
+
 
 type Mutation {
     bulkCreateCountry(input: [countryInput!]!): CountriesResult!
     createCountry(input: countryInput): CountryResult!
     updateCountry(id: ID!, input: countryInput): CountryResult!
     deleteCountry(id: ID): CountryResult!
+    createBorder(input: borderInput): BorderResult!
 }
 
 type Query {
     listCountries: CountriesResult!
     getCountry(id: ID!): CountryResult!
     countries: [Country]
+    listBorders:BordersResult!
     hello: String!
 }

@@ -26,3 +26,10 @@ class Border(db.Model):
     origin_id = db.Column(db.Integer, db.ForeignKey("country.id"))
     destination_id = db.Column(db.Integer, db.ForeignKey("country.id"))
     status = db.Column(db.Enum(Status))
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "origin_id": self.origin_id,
+            "destination_id": self.destination_id,
+            "status": self.status
+        }

@@ -1,13 +1,17 @@
-from .models import Country
-from ariadne import QueryType, MutationType
+from ..models import Country
 from sqlalchemy.exc import IntegrityError
 from psycopg2.errors import UniqueViolation
-from . import db
+from .. import db
+# from base import query, mutation
+from ariadne import QueryType, MutationType, ObjectType
+
 #File containing graphql resolvers(queries)
 
-#establish binder that binds resolvers to schema // alternative query=ObjectType("Query")
+# #establish binder that binds resolvers to schema // alternative query=ObjectType("Query")
+
 query = QueryType()
 mutation = MutationType()
+
 
 
 #bind resolver to schema item with query.field
@@ -148,6 +152,3 @@ def resolve_bulk_create_country(obj, info, input):
         }
     return payload
 
-@query.field("hello")
-def resolve_hello(*_):
-    return "Hello!"
